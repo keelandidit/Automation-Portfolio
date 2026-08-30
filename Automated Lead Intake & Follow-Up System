@@ -1,0 +1,43 @@
+# Automated Lead Intake & Follow-Up System
+
+**Tools used:** n8n, Baserow, Google Sheets/Forms, Gmail, Abstract API
+
+## The Problem
+
+Manually tracking new contacts/leads is easy to fall behind on — entries pile up in a spreadsheet or inbox, get lost, and follow-ups slip through the cracks. There's no automatic way to know when someone new comes in, whether their contact info is even valid, or when it's time to follow up.
+
+## What I Built
+
+A two-part automation system that turns a simple form into a self-maintaining mini-CRM:
+
+**1. Intake Pipeline** — triggers the moment a new contact is submitted:
+- Captures new submissions from a Google Form via a Google Sheets trigger
+- Validates and enriches the email address using the Abstract API (deliverability status, MX records, sender/organization data)
+- Writes the enriched record into a Baserow CRM table
+- Sends a real-time email notification with the new contact's details
+
+**2. Follow-Up Scheduler** — runs independently on a daily timer:
+- Queries the CRM for contacts still marked "New"
+- Filters for entries older than 3 days with no status update
+- Sends a reminder email listing exactly who still needs follow-up
+
+## Workflow Diagram
+
+*[Insert n8n canvas screenshot(s) here — one for each workflow]*
+
+## Skills Demonstrated
+
+- **API integration** — calling a third-party REST API, handling authentication, and parsing a nested JSON response
+- **Data enrichment** — combining data from multiple upstream sources (form + API) into a single unified record
+- **Conditional logic** — filtering records based on both string and date comparisons
+- **Scheduled automation** — a fully independent, timer-driven workflow separate from the event-driven intake pipeline
+- **Debugging real-world data shapes** — handling Baserow's single-select field objects, date formatting requirements, and cross-node data referencing
+- **CRM design** — structuring a data table to support both automated writes and manual status tracking
+
+## Outcome
+
+New contacts are automatically validated, enriched, and logged with zero manual data entry, and stale leads get surfaced automatically instead of relying on memory. The system runs continuously in the background and required debugging real API errors, nested data structures, and field-type mismatches — the same kinds of issues that come up in production automation work.
+
+## Next Steps
+
+Planned extensions: AI-generated contact summaries/follow-up drafts, and a second automation pulling relevant listings from a job-board RSS feed into the same system.
