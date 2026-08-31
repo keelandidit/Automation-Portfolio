@@ -28,6 +28,9 @@ Queries the CRM for contacts still marked "New"
 Filters for entries older than 3 days with no status update
 Sends a reminder email listing exactly who still needs follow-up
 
+![Intake pipeline](Intake-Flow.png)
+[Download intake-workflow.json](Intake-Flow.json)
+
 3. Job-Board Watcher — a separate scheduled workflow:
 
 Polls a We Work Remotely RSS feed on a timer
@@ -35,6 +38,10 @@ Filters postings by keyword relevance (automation, no-code, RevOps, etc.)
 Deduplicates against previously-seen postings using n8n's built-in duplicate tracking, so re-runs never create repeat entries
 Writes new matches to a dedicated Jobs table in Baserow
 Sends a notification for each genuinely new match
+
+![Job-Board Watcher](Job-Tracker-Flow.png)
+[Download intake-workflow.json](Intake-Flow.json)
+
 Skills Demonstrated
 API integration — calling third-party REST APIs, handling authentication, parsing nested JSON, and respecting rate limits with batching
 Multi-source data normalization — unifying two differently-shaped trigger inputs (form data vs. webhook payload) into one consistent format
