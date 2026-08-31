@@ -19,8 +19,8 @@ Uses Google Gemini to generate a short summary of the contact and a draft follow
 Writes the enriched, AI-summarized record into a Baserow CRM table
 Sends a real-time email notification with the new contact's details and AI-generated draft
 
-![Intake pipeline](Lead-Tracker-Flow.png)
-[Download intake-workflow.json](Lead-Tracker-via-Google-Form-and-Webhooks.json)
+![Intake pipeline](Lead-Tracker-Flow.jpg)
+[Download intake-workflow.json](Lead-Tracker-via-Google-Form-and-Webhooks (2).json)
 
 2. Follow-Up Scheduler — runs independently on a daily timer:
 
