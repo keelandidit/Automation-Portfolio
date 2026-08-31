@@ -20,6 +20,7 @@ Writes the enriched, AI-summarized record into a Baserow CRM table
 Sends a real-time email notification with the new contact's details and AI-generated draft
 
 ![Intake pipeline](Intake-Flow.png)
+
 [Download intake-workflow.json](Intake-Flow.json)
 
 2. Follow-Up Scheduler — runs independently on a daily timer:
