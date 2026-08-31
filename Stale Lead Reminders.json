@@ -1,0 +1,160 @@
+{
+  "name": "Stale Lead Reminders",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "300bab50-edef-4c12-a783-b5466063e93e",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "authentication": "databaseToken",
+        "tableId": 1166557,
+        "additionalOptions": {
+          "filters": {
+            "fields": [
+              {
+                "field": 10487625,
+                "operator": "contains",
+                "value": "New"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "0a8c0b6a-7015-442e-9080-c3c1ab278011",
+      "name": "Get many rows",
+      "credentials": {
+        "baserowTokenApi": {
+          "id": "Mtr2e4YyfUhFVO1V",
+          "name": "Baserow Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "84a5ada8-1ad1-4352-8180-20405f73f510",
+              "leftValue": "={{$json[\"Date Received\"]}}",
+              "rightValue": "={{$now.minus({days: 3}).toFormat(\"yyyy-MM-dd\")}}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "before"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        0
+      ],
+      "id": "d41ca8bb-92c6-4e71-a14e-4b53d912209b",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "sendTo": "keelanwilldoit@gmail.com",
+        "subject": "Stale Lead - n8n Test",
+        "message": "=Follow-up needed: {{$json[\"Name\"]}} ({{$json[\"Company\"]}}) — Date Added: {{$json[\"Date Received\"]}}, Still Marked: {{$json[\"Status\"].map(s => s.value).join(\", \")}}.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        0
+      ],
+      "id": "82eeed11-3fc4-4da0-9fec-0907a61d5439",
+      "name": "Send a message",
+      "webhookId": "ab11b47a-ecc9-4b1d-a909-23a95875437b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ZStqHADSQgRUNv6x",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get many rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many rows": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "901b1a8a-54d6-4049-bd2a-f4ff114f2c08",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "92867c512a07978f1d751390e20aaa92d49aeb7ae2534c67cb38485adc39a6f8"
+  },
+  "nodeGroups": [],
+  "id": "7xOhGVxtQNsxVDK2",
+  "tags": []
+}

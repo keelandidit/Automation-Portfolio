@@ -1,0 +1,357 @@
+{
+  "name": "Lead Tracker via Google Form and Webhooks",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "10hw4Q9wNy-y59nRGMmAcSgCzI6XZOmuDBaSiGMr4FPA",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1002781216,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10hw4Q9wNy-y59nRGMmAcSgCzI6XZOmuDBaSiGMr4FPA/edit#gid=1002781216"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "1248284a-25ec-46ae-9c05-fc75f876e825",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "QFGsJ3isRwdtUYmZ",
+          "name": "Google Sheets Trigger account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://emailreputation.abstractapi.com/v1/?api_key=b3d96165e4854de48a44c856b7df3d5b&email={{$json[\"Email\"]}}",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 2000
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        448,
+        0
+      ],
+      "id": "671a06f3-df60-4b8e-b327-4fdb305ab4f5",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "authentication": "databaseToken",
+        "operation": "create",
+        "tableId": 1166557,
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": 10487524,
+              "fieldValue": "={{$node[\"Google Sheets Trigger\"].json[\"Name\"]}}"
+            },
+            {
+              "fieldId": 10487529,
+              "fieldValue": "={{$json[\"email_address\"]}}"
+            },
+            {
+              "fieldId": 10487530,
+              "fieldValue": "={{$node[\"Google Sheets Trigger\"].json[\"Company\"]}}"
+            },
+            {
+              "fieldId": 10487625,
+              "fieldValue": "New"
+            },
+            {
+              "fieldId": 10487627,
+              "fieldValue": "={{$now.toFormat(\"yyyy-MM-dd\")}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.baserow",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        0
+      ],
+      "id": "e8e5e9a0-9a36-4ce1-9d03-5b51be035253",
+      "name": "Create a row",
+      "credentials": {
+        "baserowTokenApi": {
+          "id": "Mtr2e4YyfUhFVO1V",
+          "name": "Baserow Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "keelanwilldoit@gmail.com",
+        "subject": "=New contact: {{$node[\"Google Sheets Trigger\"].json[\"Name\"]}} Company: {{$node[\"Google Sheets Trigger\"].json[\"Company\"]}}",
+        "message": "={{ $json.content.parts[0].text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1280,
+        0
+      ],
+      "id": "22dafbbc-2e5b-4b70-a3b3-98bb6408cef0",
+      "name": "Send a message",
+      "webhookId": "486f610a-68af-4ca6-8fe9-7ff07c744104",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ZStqHADSQgRUNv6x",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "new-lead",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        -128
+      ],
+      "id": "db659675-861d-43f3-9262-6ae7d061234c",
+      "name": "Webhook",
+      "webhookId": "13ca3a2e-9ab2-4afb-a0ef-b901611721e1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "73b26a7e-c606-4227-8ced-7417c6f8e467",
+              "name": "Name",
+              "value": "=\t{{$json[\"body\"][\"Name\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "e4f2e56b-1504-4c38-b3f7-0afc3a35eb38",
+              "name": "Email",
+              "value": "=\t{{$json[\"body\"][\"Email\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "7900bcbf-4971-4db6-a6c0-d6212d54a6ac",
+              "name": "Company",
+              "value": "=\t{{$json[\"body\"][\"Company\"]}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        -128
+      ],
+      "id": "fb36bff6-c367-4c1d-bb49-42af239f4030",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "260518e9-d1bd-489b-9c84-5601b1d305f1",
+              "name": "Timestamp",
+              "value": "={{ $json.Timestamp }}",
+              "type": "string"
+            },
+            {
+              "id": "73b26a7e-c606-4227-8ced-7417c6f8e467",
+              "name": "Name",
+              "value": "=\t{{$json[\"Name\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "e4f2e56b-1504-4c38-b3f7-0afc3a35eb38",
+              "name": "Email",
+              "value": "=\t{{$json[\"Email\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "7900bcbf-4971-4db6-a6c0-d6212d54a6ac",
+              "name": "Company",
+              "value": "=\t{{$json[\"Company\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "4a612a61-1989-4273-86b7-06e5008d225d",
+              "name": "Source",
+              "value": "={{ $json.Source }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "168a3c2a-c774-4c03-bc7b-2322f6671e77",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-flash-lite-latest",
+          "mode": "list",
+          "cachedResultName": "models/gemini-flash-lite-latest"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Write a 2-sentence summary of this new contact, then draft a short, friendly follow-up email. Name: {{$json[\"Name\"]}}, Company: {{$json[\"Company\"]}}, Company: {{$json[\"Email\"]}}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        896,
+        0
+      ],
+      "id": "6057639b-570a-47b1-9c76-cf3f4d35ab75",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "vVqZDMi0F2XTwFq6",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "64d4e453-f15f-4438-bd40-c023f01e4911",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "92867c512a07978f1d751390e20aaa92d49aeb7ae2534c67cb38485adc39a6f8"
+  },
+  "nodeGroups": [],
+  "id": "NwMpOGXhBnKC7qa9",
+  "tags": []
+}
