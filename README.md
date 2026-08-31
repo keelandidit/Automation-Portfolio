@@ -29,7 +29,7 @@ Filters for entries older than 3 days with no status update
 Sends a reminder email listing exactly who still needs follow-up
 
 ![Intake pipeline](Stale-Lead-Flow.png)
-n/[Download intake-workflow.json](Stale-Lead.json)
+[Download intake-workflow.json](Stale-Lead.json)
 
 3. Job-Board Watcher — a separate scheduled workflow:
 
