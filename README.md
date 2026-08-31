@@ -28,8 +28,8 @@ Queries the CRM for contacts still marked "New"
 Filters for entries older than 3 days with no status update
 Sends a reminder email listing exactly who still needs follow-up
 
-![Intake pipeline](Intake-Flow.png)
-[Download intake-workflow.json](Intake-Flow.json)
+![Intake pipeline](Stale-Lead-Flow.png)
+[Download intake-workflow.json](Stale-Lead.json)
 
 3. Job-Board Watcher — a separate scheduled workflow:
 
@@ -40,7 +40,7 @@ Writes new matches to a dedicated Jobs table in Baserow
 Sends a notification for each genuinely new match
 
 ![Job-Board Watcher](Job-Tracker-Flow.png)
-[Download intake-workflow.json](Intake-Flow.json)
+[Download intake-workflow.json](Job-Board-Watcher.json)
 
 Skills Demonstrated
 API integration — calling third-party REST APIs, handling authentication, parsing nested JSON, and respecting rate limits with batching
