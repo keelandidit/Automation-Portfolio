@@ -20,7 +20,7 @@ Writes the enriched, AI-summarized record into a Baserow CRM table
 Sends a real-time email notification with the new contact's details and AI-generated draft
 
 ![Intake pipeline](Intake-Flow.png)
-![Download intake-workflow.json](Intake-Flow.json)
+[Download intake-workflow.json](Intake-Flow.json)
 
 2. Follow-Up Scheduler — runs independently on a daily timer:
 
@@ -29,7 +29,7 @@ Filters for entries older than 3 days with no status update
 Sends a reminder email listing exactly who still needs follow-up
 
 ![Intake pipeline](Stale-Lead-Flow.png)
-[Download intake-workflow.json](Stale-Lead.json)
+n/[Download intake-workflow.json](Stale-Lead.json)
 
 3. Job-Board Watcher — a separate scheduled workflow:
 
